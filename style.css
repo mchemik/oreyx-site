@@ -61,7 +61,7 @@
   /* Rhythm */
   --container: 1140px;
   --section-pad: clamp(4.5rem, 9vw, 7.5rem);
-  --header-h: 104px;
+  --header-h: 118px;
 }
 
 /* ---------- Reset / base ---------- */
@@ -198,12 +198,12 @@ h3 { font-size: 1.15rem; font-weight: 600; }
 }
 .brand:hover { text-decoration: none; }
 
-.brand-mark { width: 78px; height: 84px; }
+.brand-mark { width: 96px; height: 103px; }
 
 .brand-name {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.7rem;
+  font-size: 1.9rem;
   letter-spacing: 0.08em;
   color: var(--ink-navy);
 }
@@ -749,7 +749,7 @@ h3 { font-size: 1.15rem; font-weight: 600; }
 }
 
 @media (max-width: 640px) {
-  :root { --header-h: 84px; }
+  :root { --header-h: 96px; }
 
   /* Mobile nav: white slide-down panel under the header */
   .nav-toggle { display: flex; }
@@ -790,8 +790,8 @@ h3 { font-size: 1.15rem; font-weight: 600; }
   }
   .hero::after { display: none; }
 
-  .brand-mark { width: 58px; height: 62px; }
-  .brand-name { font-size: 1.35rem; }
+  .brand-mark { width: 72px; height: 77px; }
+  .brand-name { font-size: 1.5rem; }
 
   .card-grid,
   .feature-grid,
