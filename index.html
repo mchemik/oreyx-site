@@ -309,9 +309,11 @@
             </dl>
           </div>
 
-          <!-- Front-end-only form: submission opens the visitor's mail
-               client via a pre-filled mailto: link (see script.js). -->
+          <!-- Sends directly from the page via FormSubmit relay to
+               info@ore-yx.com (see script.js). -->
           <form class="contact-form reveal" id="contact-form" novalidate>
+            <!-- Honeypot anti-spam field: hidden from humans -->
+            <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
             <div class="form-row">
               <div class="form-field">
                 <label for="cf-name">Name</label>
@@ -331,7 +333,8 @@
               <textarea id="cf-message" name="message" rows="5" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary btn-block">Send message</button>
-            <p class="form-hint">Submitting opens your email client addressed to info@ore-yx.com.</p>
+            <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+            <p class="form-hint">Your message goes directly to info@ore-yx.com.</p>
           </form>
 
         </div>

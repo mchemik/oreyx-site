@@ -95,10 +95,17 @@
     });
   }
 
-  /* ---------- 4. Contact form → mailto ---------- */
-  // Front-end only: builds a pre-filled mailto: link and opens the
-  // visitor's mail client. Swap this for a real endpoint later if needed.
+  /* ---------- 4. Contact form → direct send ---------- */
+  // Submits from the page itself (no mail app needed) via FormSubmit,
+  // which relays the message to info@ore-yx.com.
   var form = document.getElementById("contact-form");
+  var statusEl = document.getElementById("form-status");
+  var submitBtn = form.querySelector('button[type="submit"]');
+
+  function setStatus(text, ok) {
+    statusEl.textContent = text;
+    statusEl.className = "form-status " + (ok ? "is-ok" : "is-error");
+  }
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -108,22 +115,49 @@
       return;
     }
 
+    // Honeypot: bots fill every field; humans never see this one
+    if (form.elements._honey.value) { return; }
+
     var name = form.elements.name.value.trim();
     var company = form.elements.company.value.trim();
     var email = form.elements.email.value.trim();
     var message = form.elements.message.value.trim();
 
-    var subject = "Enquiry from " + company + " — ore-yx.com";
-    var body =
-      "Name: " + name + "\n" +
-      "Company: " + company + "\n" +
-      "Email: " + email + "\n\n" +
-      message;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Sending…";
 
-    window.location.href =
-      "mailto:info@ore-yx.com" +
-      "?subject=" + encodeURIComponent(subject) +
-      "&body=" + encodeURIComponent(body);
+    fetch("https://formsubmit.co/ajax/info@ore-yx.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({
+        _subject: "Website enquiry — " + company,
+        name: name,
+        company: company,
+        email: email,
+        message: message
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (data.success === "true" || data.success === true) {
+          form.reset();
+          setStatus("Message sent. We will come back to you.", true);
+        } else {
+          throw new Error(data.message || "send failed");
+        }
+      })
+      .catch(function () {
+        // Fallback: open the visitor's mail client instead
+        setStatus("Direct send failed — opening your email app instead.", false);
+        var subject = "Enquiry from " + company + " — ore-yx.com";
+        var body = "Name: " + name + "\nCompany: " + company + "\nEmail: " + email + "\n\n" + message;
+        window.location.href = "mailto:info@ore-yx.com?subject=" +
+          encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      })
+      .then(function () {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send message";
+      });
   });
 
   /* ---------- 5. Copyright year ---------- */
